@@ -40,6 +40,7 @@ public class ConfirmationSection extends AppCompatActivity  {
     private static final int PICK_IMAGE_REQUEST = 1;
     FirebaseDatabase database;
     DatabaseReference orderList;
+    DatabaseReference statuss;
     DatabaseReference confirmations;
     private StorageTask mUploadTask;
     private StorageReference mStorageRef;
@@ -63,6 +64,7 @@ public class ConfirmationSection extends AppCompatActivity  {
         submit = (Button) findViewById(R.id.button_upload);
         database = FirebaseDatabase.getInstance();
         orderList = database.getReference("Requests");
+
         confirmations = database.getReference("Confirmation");
         mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
@@ -133,7 +135,7 @@ public class ConfirmationSection extends AppCompatActivity  {
                                         public void run() {
                                             mProgressBar.setProgress(0);
                                         }
-                                    }, 1000);
+                                    }, 200);
                                     Toast.makeText(ConfirmationSection.this, "Upload successful", Toast.LENGTH_SHORT).show();
                                     confirmations.addValueEventListener(new ValueEventListener() {
                                         @Override
@@ -148,6 +150,8 @@ public class ConfirmationSection extends AppCompatActivity  {
 
                                                 Confirmation products = new Confirmation(oID.getSelectedItem().toString(),no.getText().toString(), name.getText().toString(),"no Confirmed", taskSnapshot.getDownloadUrl().toString());
                                                 confirmations.child(oID.getSelectedItem().toString()).setValue(products);
+                                                statuss = database.getReference("Requests").child(oID.getSelectedItem().toString());
+                                                statuss.child("status").setValue("Waiting Admin Confirmation");
                                                 // Toast.makeText(addProduct.this, "Account successfully created!", Toast.LENGTH_SHORT).show();
 
                                             }

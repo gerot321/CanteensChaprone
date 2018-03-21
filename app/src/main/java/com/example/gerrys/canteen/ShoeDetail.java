@@ -62,7 +62,7 @@ public class ShoeDetail extends AppCompatActivity {
         // Init view
         numberButton = (ElegantNumberButton)findViewById(R.id.number_button);
         btnCart = (FloatingActionButton)findViewById(R.id.btnCart);
-
+        category = database.getReference("Category").child(merchantID).child("origin");
         btnCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,7 +109,7 @@ public class ShoeDetail extends AppCompatActivity {
                 alertDialog.setPositiveButton("GO", new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int which) {
-                        category = database.getReference("Category").child(merchantID).child("origin");
+
                         category.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -153,7 +153,7 @@ public class ShoeDetail extends AppCompatActivity {
                                         addr
                                 ));
 
-
+                                //category.child("status").setValue("Waiting Admin Confirmation");
                             }
 
                             @Override
