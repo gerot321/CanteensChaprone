@@ -67,7 +67,7 @@ public class Checkout extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //Create new request
-                Status = "Waiting";
+                Status = "Waiting Payment";
                 addr = addrs.getText().toString();
                 final Request request = new Request(
                         Common.currentUser.getPhone(),

@@ -49,7 +49,7 @@ public class ConfirmationSection extends AppCompatActivity  {
     private Button mButtonChooseImage, submit;
     private ProgressBar mProgressBar;
     private EditText name,no;
-
+    Confirmation confirmss;
 
     String ID,keys;
     Spinner oID;
@@ -75,23 +75,26 @@ public class ConfirmationSection extends AppCompatActivity  {
 
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot child: dataSnapshot.getChildren()) {
+                    confirmss = child.getValue(Confirmation.class);
+                    if(confirmss.getStatus().toString().equals("Waiting Payment")){
+                        list.add(child.getKey());
+                        oID = (Spinner)findViewById(R.id.orderList);
 
-                    list.add(child.getKey());
-                    oID = (Spinner)findViewById(R.id.orderList);
+                        final ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(ConfirmationSection.this,android.R.layout.simple_spinner_item, list);
+                        oID.setAdapter(dataAdapter);
+                        oID.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                Toast.makeText(ConfirmationSection.this, "Selected "+ dataAdapter.getItem(position), Toast.LENGTH_SHORT).show();
+                            }
 
-                    final ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(ConfirmationSection.this,android.R.layout.simple_spinner_item, list);
-                    oID.setAdapter(dataAdapter);
-                    oID.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                        @Override
-                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            Toast.makeText(ConfirmationSection.this, "Selected "+ dataAdapter.getItem(position), Toast.LENGTH_SHORT).show();
-                        }
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {
 
-                        @Override
-                        public void onNothingSelected(AdapterView<?> parent) {
+                            }
+                        });
+                    }
 
-                        }
-                    });
 
                 }
             }
@@ -148,7 +151,7 @@ public class ConfirmationSection extends AppCompatActivity  {
                                             } else {
                                                 //mDialog.dismiss();
 
-                                                Confirmation products = new Confirmation(oID.getSelectedItem().toString(),no.getText().toString(), name.getText().toString(),"no Confirmed", taskSnapshot.getDownloadUrl().toString());
+                                                Confirmation products = new Confirmation(oID.getSelectedItem().toString(),no.getText().toString(), name.getText().toString(),"Waiting Admin Confirmation", taskSnapshot.getDownloadUrl().toString());
                                                 confirmations.child(oID.getSelectedItem().toString()).setValue(products);
                                                 statuss = database.getReference("Requests").child(oID.getSelectedItem().toString());
                                                 statuss.child("status").setValue("Waiting Admin Confirmation");
@@ -182,6 +185,8 @@ public class ConfirmationSection extends AppCompatActivity  {
 
                     Toast.makeText(ConfirmationSection.this, "No file selected", Toast.LENGTH_SHORT).show();
                 }
+                Intent intent = new Intent(ConfirmationSection.this,ShoeList.class);
+                startActivity(intent);
             }
         });
 
