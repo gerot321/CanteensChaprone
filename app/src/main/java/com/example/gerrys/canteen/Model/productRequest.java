@@ -10,20 +10,39 @@ public class productRequest {
     private String quantity;
     private String totalprice;
     private String address;
+    private String status;
 
     public productRequest(){
 
     }
 
-    public productRequest(String merchantid, String productid, String productname,String quantity,String totalprice,String address) {
+    public productRequest(String requestid,String merchantid, String productid, String productname,String quantity,String totalprice,String address,String status) {
+        this.requestid=requestid;
        this.merchantid=merchantid;
        this.productid=productid;
-       this.productid=productname;
+       this.productname=productname;
        this.quantity=quantity;
        this.totalprice=totalprice;
        this.address=address;
+       this.status=status;
+
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getRequestid() {
+        return requestid;
+    }
+
+    public void setRequestid(String requestid) {
+        this.requestid = requestid;
+    }
 
     public String getAddress() {
         return address;

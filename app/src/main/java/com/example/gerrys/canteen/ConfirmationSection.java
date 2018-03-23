@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
@@ -20,8 +19,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.gerrys.canteen.Model.Confirmation;
-import com.example.gerrys.canteen.Model.Order;
-import com.example.gerrys.canteen.Model.productRequest;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -37,7 +34,6 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ConfirmationSection extends AppCompatActivity  {
     private static final int PICK_IMAGE_REQUEST = 1;
@@ -57,25 +53,28 @@ public class ConfirmationSection extends AppCompatActivity  {
 
     DatabaseReference prod;
     DatabaseReference prodReq;
+    DatabaseReference ad;
 
     String ID,keys;
     Spinner oID;
-    int count = 0;
+    String prodId;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirmation);
         mImageView = (ImageView) findViewById(R.id.image_view);
         name = (EditText) findViewById(R.id.editName);
+
         no = (EditText) findViewById(R.id.editNo);
         mButtonChooseImage = (Button) findViewById(R.id.button_choose_image);
         submit = (Button) findViewById(R.id.button_upload);
         database = FirebaseDatabase.getInstance();
         orderList = database.getReference("Requests");
         prodReq = database.getReference("productReq");
-
+        ad = database.getReference("od");
         confirmations = database.getReference("Confirmation");
         prod = database.getReference("Product");
         mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
+
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
         final ArrayList<String> list = new ArrayList<String>();
 
@@ -139,7 +138,7 @@ public class ConfirmationSection extends AppCompatActivity  {
                             .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                 @Override
                                 public void onSuccess(final UploadTask.TaskSnapshot taskSnapshot) {
-                                    Handler handler = new Handler();
+                                    final Handler handler = new Handler();
                                     handler.postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
@@ -162,8 +161,7 @@ public class ConfirmationSection extends AppCompatActivity  {
 
                                                 Confirmation products = new Confirmation(oID.getSelectedItem().toString(),no.getText().toString(), name.getText().toString(),"Waiting Admin Confirmation", taskSnapshot.getDownloadUrl().toString());
                                                 confirmations.child(oID.getSelectedItem().toString()).setValue(products);
-                                                statuss = database.getReference("Requests").child(oID.getSelectedItem().toString());
-                                                statuss.child("status").setValue("Waiting Admin Confirmation");
+
 
                                                /* for(int a=0;a<=cart.size();a++){
                                                     final int index = a;
@@ -212,41 +210,12 @@ public class ConfirmationSection extends AppCompatActivity  {
 
                                         }
                                     });
-                                    final List<Order> cart =  new ArrayList<>();
-                                    orderList.child(oID.getSelectedItem().toString()).child("product").addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(DataSnapshot dataSnapshot) {
-                                            for (DataSnapshot child: dataSnapshot.getChildren()) {
-                                                Order orders = child.getValue(Order.class);
-                                                cart.add(orders);
 
-                                            }
-                                            Log.d("asdasdasd12313", String.valueOf(cart.size()));
-                                        }
 
-                                        @Override
-                                        public void onCancelled(DatabaseError databaseError) {
 
-                                        }
-                                    });
 
-                                    for(int a=1;a<=cart.size();a++){
-                                        final int index = a;
-                                        prod.child(cart.get(a).getProductId().toString()).child("MerchantId").addValueEventListener(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                                productRequest req= new productRequest(dataSnapshot.getValue().toString(),cart.get(index).getProductId(),cart.get(index).getProductName().toString(),cart.get(index).getQuantity().toString()
-                                                        ,cart.get(index).getPrice().toString(),cart.get(index).getAddress()) ;
-                                                prodReq.child(oID.getSelectedItem().toString()).setValue(req);
-                                            }
-
-                                            @Override
-                                            public void onCancelled(DatabaseError databaseError) {
-
-                                            }
-                                        });
-
-                                    }
+                                    statuss = database.getReference("Requests").child(oID.getSelectedItem().toString());
+                                    statuss.child("status").setValue("Waiting Admin Confirmation");
 
                                 }
                             })
