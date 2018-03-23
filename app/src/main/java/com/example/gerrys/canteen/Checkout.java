@@ -2,7 +2,9 @@ package com.example.gerrys.canteen;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.CardView;
@@ -22,6 +24,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -61,7 +64,7 @@ public class Checkout extends AppCompatActivity {
 
         cart = new Database(this).getCarts();
         for (Order order:cart)
-            total+=(Integer.parseInt(order.getPrice()))*(Integer.parseInt(order.getQuantity()));
+            total+=(Integer.parseInt(order.getPrice()));
 
         Ovo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,6 +81,8 @@ public class Checkout extends AppCompatActivity {
                         Status,
                         "OVO"
                 );
+
+
                 Random r = new Random();
                 int unic = r.nextInt(80 - 1) + 1;
                 PriCode = Common.currentUser.getPhone();
@@ -98,6 +103,9 @@ public class Checkout extends AppCompatActivity {
 
                             requests.child(orderId)
                                     .setValue(request);
+                            Intent intent = new Intent(orderId).putExtra("cart", (Serializable) cart);
+                            LocalBroadcastManager.getInstance(Checkout.this).sendBroadcast(intent);
+
                             Toast.makeText(Checkout.this, "Account successfully created!", Toast.LENGTH_SHORT).show();
                             finish();
                         }

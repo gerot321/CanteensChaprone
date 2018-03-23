@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
@@ -19,6 +20,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.gerrys.canteen.Model.Confirmation;
+import com.example.gerrys.canteen.Model.Order;
+import com.example.gerrys.canteen.Model.productRequest;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -51,6 +54,10 @@ public class ConfirmationSection extends AppCompatActivity  {
     private EditText name,no;
     Confirmation confirmss;
 
+
+    DatabaseReference prod;
+    DatabaseReference prodReq;
+
     String ID,keys;
     Spinner oID;
     int count = 0;
@@ -64,11 +71,15 @@ public class ConfirmationSection extends AppCompatActivity  {
         submit = (Button) findViewById(R.id.button_upload);
         database = FirebaseDatabase.getInstance();
         orderList = database.getReference("Requests");
+        prodReq = database.getReference("productReq");
 
         confirmations = database.getReference("Confirmation");
+        prod = database.getReference("Product");
         mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
-        final List<String> list = new ArrayList<String>();
+        final ArrayList<String> list = new ArrayList<String>();
+
+
         ID= getIntent().getStringExtra("userID");
 
         orderList.orderByChild("phone").equalTo(ID).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -94,8 +105,6 @@ public class ConfirmationSection extends AppCompatActivity  {
                             }
                         });
                     }
-
-
                 }
             }
 
@@ -104,8 +113,6 @@ public class ConfirmationSection extends AppCompatActivity  {
 
             }
         });
-
-
 
         //set the view for the Drop down list
 
@@ -140,6 +147,8 @@ public class ConfirmationSection extends AppCompatActivity  {
                                         }
                                     }, 200);
                                     Toast.makeText(ConfirmationSection.this, "Upload successful", Toast.LENGTH_SHORT).show();
+                                    final Intent intent = new Intent(ConfirmationSection.this,ShoeList.class);
+                                    startActivity(intent);
                                     confirmations.addValueEventListener(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -155,8 +164,46 @@ public class ConfirmationSection extends AppCompatActivity  {
                                                 confirmations.child(oID.getSelectedItem().toString()).setValue(products);
                                                 statuss = database.getReference("Requests").child(oID.getSelectedItem().toString());
                                                 statuss.child("status").setValue("Waiting Admin Confirmation");
-                                                // Toast.makeText(addProduct.this, "Account successfully created!", Toast.LENGTH_SHORT).show();
 
+                                               /* for(int a=0;a<=cart.size();a++){
+                                                    final int index = a;
+                                                    prod.child(cart.get(a).getProductId().toString()).child("MerchantId").addValueEventListener(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                                            productRequest req= new productRequest(dataSnapshot.getValue().toString(),cart.get(index).getProductId(),cart.get(index).getProductName().toString(),cart.get(index).getQuantity().toString()
+                                                                    ,cart.get(index).getPrice().toString(),cart.get(index).getAddress()) ;
+                                                            prodReq.child(oID.getSelectedItem().toString()).setValue(req);
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(DatabaseError databaseError) {
+
+                                                        }
+                                                    });
+
+                                                }*/
+
+
+                                          //      LocalBroadcastManager.getInstance(ConfirmationSection.this).registerReceiver(mReceiver,new IntentFilter(oID.getSelectedItem().toString()));
+
+
+                                                /*for(int a=0;a<=cart.size();a++){
+                                                    final int index = a;
+                                                    prod.child(cart.get(a).getProductId().toString()).child("MerchantId").addValueEventListener(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(DatabaseError databaseError) {
+
+                                                        }
+                                                    });
+
+                                                }*/
+
+                                                // Toast.makeText(addProduct.this, "Account successfully created!", Toast.LENGTH_SHORT).show();
                                             }
                                         }
 
@@ -165,6 +212,41 @@ public class ConfirmationSection extends AppCompatActivity  {
 
                                         }
                                     });
+                                    final List<Order> cart =  new ArrayList<>();
+                                    orderList.child(oID.getSelectedItem().toString()).child("product").addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            for (DataSnapshot child: dataSnapshot.getChildren()) {
+                                                Order orders = child.getValue(Order.class);
+                                                cart.add(orders);
+
+                                            }
+                                            Log.d("asdasdasd12313", String.valueOf(cart.size()));
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+
+                                    for(int a=1;a<=cart.size();a++){
+                                        final int index = a;
+                                        prod.child(cart.get(a).getProductId().toString()).child("MerchantId").addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                productRequest req= new productRequest(dataSnapshot.getValue().toString(),cart.get(index).getProductId(),cart.get(index).getProductName().toString(),cart.get(index).getQuantity().toString()
+                                                        ,cart.get(index).getPrice().toString(),cart.get(index).getAddress()) ;
+                                                prodReq.child(oID.getSelectedItem().toString()).setValue(req);
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+
+                                            }
+                                        });
+
+                                    }
 
                                 }
                             })
@@ -185,15 +267,13 @@ public class ConfirmationSection extends AppCompatActivity  {
 
                     Toast.makeText(ConfirmationSection.this, "No file selected", Toast.LENGTH_SHORT).show();
                 }
-                Intent intent = new Intent(ConfirmationSection.this,ShoeList.class);
-                startActivity(intent);
+
             }
         });
 
     }
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
                 && data != null && data.getData() != null) {
             mImageUri = data.getData();
@@ -206,6 +286,11 @@ public class ConfirmationSection extends AppCompatActivity  {
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(cR.getType(uri));
     }
-
+    /*private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+             cart = (List<Order>) intent.getSerializableExtra("cart");
+        }
+    };*/
 
 }
