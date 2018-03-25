@@ -1,9 +1,5 @@
 package com.example.gerrys.canteen.Model;
 
-/**
- * Created by Cj_2 on 2017-11-12.
- */
-
 public class Shoe {
     private String Name, Image, Description, Price, Stock, MerchantId;
 

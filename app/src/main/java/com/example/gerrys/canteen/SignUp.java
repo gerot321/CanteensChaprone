@@ -54,7 +54,7 @@ public class SignUp extends AppCompatActivity {
                         }else {
                             mDialog.dismiss();
 
-                            User user = new User(etName.getText().toString(), etPassword.getText().toString(), "Costumer");
+                            User user = new User(etName.getText().toString(), etPassword.getText().toString(), "Costumer","0");
                             table_user.child(etPhone.getText().toString()).setValue(user);
                             Toast.makeText(SignUp.this, "Account successfully created!", Toast.LENGTH_SHORT).show();
                             finish();

@@ -8,9 +8,6 @@ import android.widget.TextView;
 import com.example.gerrys.canteen.Interface.ItemClickListener;
 import com.example.gerrys.canteen.R;
 
-/**
- * Created by Cj_2 on 2017-11-12.
- */
 
 public class ShoeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     public TextView shoe_name;

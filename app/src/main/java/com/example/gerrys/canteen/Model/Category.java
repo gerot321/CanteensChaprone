@@ -1,8 +1,5 @@
 package com.example.gerrys.canteen.Model;
 
-/**
- * Created by Cj_2 on 2017-11-04.
- */
 
 public class Category {
     private String Name;

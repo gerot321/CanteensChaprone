@@ -9,15 +9,24 @@ public class User {
     private String Password;
     private String Phone;
     private String Status;
-
+    private String saldo;
     public User(){
 
     }
 
-    public User(String name, String password,String status) {
+    public User(String name, String password,String status,String saldo) {
         this.name = name;
         Password = password;
         Status = status;
+        this.saldo=saldo;
+    }
+
+    public void setSaldo(String saldo) {
+        this.saldo = saldo;
+    }
+
+    public String getSaldo() {
+        return saldo;
     }
 
     public String getPhone() {

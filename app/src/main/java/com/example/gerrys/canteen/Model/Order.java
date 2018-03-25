@@ -1,8 +1,5 @@
 package com.example.gerrys.canteen.Model;
 
-/**
- * Created by Cj_2 on 2017-11-26.
- */
 
 public class Order {
     private String ProductId;

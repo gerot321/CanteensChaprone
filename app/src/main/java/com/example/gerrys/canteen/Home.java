@@ -19,19 +19,23 @@ import android.widget.TextView;
 import com.example.gerrys.canteen.Common.Common;
 import com.example.gerrys.canteen.Interface.ItemClickListener;
 import com.example.gerrys.canteen.Model.Category;
+import com.example.gerrys.canteen.Model.User;
 import com.example.gerrys.canteen.ViewHolder.MenuViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     FirebaseDatabase database;
-    DatabaseReference category;
+    DatabaseReference category,user;
 
-    TextView txtFullName;
+    TextView txtFullName,saldo;
     String ID;
     RecyclerView recycler_menu;
     RecyclerView.LayoutManager layoutManager;
@@ -50,6 +54,7 @@ public class Home extends AppCompatActivity
         // Init firebase
         database = FirebaseDatabase.getInstance();
         category = database.getReference("Category");
+        user = database.getReference("User");
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -75,6 +80,22 @@ public class Home extends AppCompatActivity
 
         txtFullName = headerView.findViewById(R.id.txtFullName);
         txtFullName.setText(Common.currentUser.getName());
+
+        saldo = headerView.findViewById(R.id.txtSaldo);
+        user.child(ID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User users = dataSnapshot.getValue(User.class);
+                saldo.setText("Saldo " + users.getSaldo().toString());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
 
         // Load menu
         recycler_menu = (RecyclerView)findViewById(R.id.recycler_menu);
@@ -161,6 +182,11 @@ public class Home extends AppCompatActivity
         }
         else if (id == R.id.nav_Confirmation) {
             Intent intent = new Intent(Home.this, ConfirmationSection.class);
+            intent.putExtra("userID", ID );
+            startActivity(intent);
+        }
+        else if (id == R.id.nav_top_up) {
+            Intent intent = new Intent(Home.this, TopUpActivity.class);
             intent.putExtra("userID", ID );
             startActivity(intent);
         }

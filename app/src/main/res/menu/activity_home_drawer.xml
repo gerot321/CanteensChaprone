@@ -20,6 +20,10 @@
             android:id="@+id/nav_Confirmation"
             android:icon="@drawable/ic_add_shopping_cart_black_24dp"
             android:title="Confirmation Payment" />
+        <item
+            android:id="@+id/nav_top_up"
+            android:icon="@drawable/ic_exit_to_app_black_24dp"
+            android:title="Top Up Saldo" />
 
         <item
             android:id="@+id/nav_log_out"

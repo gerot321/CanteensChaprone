@@ -2,9 +2,6 @@ package com.example.gerrys.canteen.Model;
 
 import java.util.List;
 
-/**
- * Created by Cj_2 on 2017-11-26.
- */
 
 public class Request {
     private String phone;
