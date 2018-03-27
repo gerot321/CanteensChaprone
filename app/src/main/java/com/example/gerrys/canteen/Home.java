@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.gerrys.canteen.Common.Common;
 import com.example.gerrys.canteen.Interface.ItemClickListener;
 import com.example.gerrys.canteen.Model.Category;
 import com.example.gerrys.canteen.Model.User;
@@ -79,7 +78,7 @@ public class Home extends AppCompatActivity
         View headerView = navigationView.getHeaderView(0);
 
         txtFullName = headerView.findViewById(R.id.txtFullName);
-        txtFullName.setText(Common.currentUser.getName());
+
 
         saldo = headerView.findViewById(R.id.txtSaldo);
         user.child(ID).addValueEventListener(new ValueEventListener() {
@@ -87,6 +86,7 @@ public class Home extends AppCompatActivity
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User users = dataSnapshot.getValue(User.class);
                 saldo.setText("Saldo " + users.getSaldo().toString());
+                txtFullName.setText(users.getName().toString());
             }
 
             @Override
@@ -186,7 +186,7 @@ public class Home extends AppCompatActivity
             startActivity(intent);
         }
         else if (id == R.id.nav_top_up) {
-            Intent intent = new Intent(Home.this, TopUpActivity.class);
+            Intent intent = new Intent(Home.this, ScanActivity.class);
             intent.putExtra("userID", ID );
             startActivity(intent);
         }

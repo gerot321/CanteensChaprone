@@ -18,8 +18,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.gerrys.canteen.Model.User;
 import com.example.gerrys.canteen.Model.Voucher;
-import com.google.android.gms.vision.barcode.Barcode;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,6 +34,7 @@ public class TopUpActivity extends AppCompatActivity {
     DatabaseReference user;
     DatabaseReference voucher;
     Toolbar mToolbar;
+    String statsaldo = "ngga";
     public static final int REQUEST_CODE = 100;
     public static final int PERMISSION_REQUEST = 200;
 
@@ -49,6 +50,65 @@ public class TopUpActivity extends AppCompatActivity {
         mToolbar = (Toolbar)findViewById(R.id.toolbar);
         mToolbar.setTitle("Top up saldo");
         mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
+       final String barcode = getIntent().getStringExtra("code");
+        if(barcode != null){
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(TopUpActivity.this);
+            alertDialog.setTitle("TopUp Saldo Confirmation");
+
+            LayoutInflater layoutInflater =
+                    (LayoutInflater) getBaseContext()
+                            .getSystemService(LAYOUT_INFLATER_SERVICE);
+
+            Context context = layoutInflater.getContext();
+            LinearLayout layout = new LinearLayout(context);
+            layout.setOrientation(LinearLayout.VERTICAL);
+
+            final TextView text = new TextView(TopUpActivity.this);
+
+            text.setGravity(Gravity.CENTER);
+            layout.addView(text);
+            voucher.child(barcode).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Voucher vocer = dataSnapshot.getValue(Voucher.class);
+                    text.setText("Voucher Amount : " + vocer.getValue().toString());
+                    result.setText(vocer.getValue().toString());
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+
+            alertDialog.setView(layout);
+
+
+            // Add edit text to alert dialog
+            alertDialog.setIcon(R.drawable.ic_add_shopping_cart_black_24dp);
+
+            alertDialog.setPositiveButton("Isi", new DialogInterface.OnClickListener() {
+
+                public void onClick(DialogInterface dialog, int which) {
+                    statsaldo = "oke";
+                }
+            });
+
+            alertDialog.setNegativeButton("Batal", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int which) {
+                    dialogInterface.dismiss();
+                }
+            });
+
+            alertDialog.show();
+
+
+        }
+
+
 
        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
            @Override
@@ -63,40 +123,130 @@ public class TopUpActivity extends AppCompatActivity {
         scanbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(TopUpActivity.this, ScanActivity.class);
-                startActivityForResult(intent, REQUEST_CODE);
+                voucher.child(barcode).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        final Voucher vocer = dataSnapshot.getValue(Voucher.class);
+                        if (vocer.getStatus().equals("valid")) {
+
+                            user.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    if (vocer.getStatus().equals("valid")) {
+                                        User users = dataSnapshot.getValue(User.class);
+                                        int total = 0;
+                                        total = Integer.valueOf(users.getSaldo()) + Integer.valueOf(vocer.getValue().toString());
+                                        user.child(userID).child("saldo").setValue(String.valueOf(total));
+                                        voucher.child(barcode).child("status").setValue("invalid");
+
+                                    }else{
+                                        Toast.makeText(TopUpActivity.this, "Kode voucher tidak sesuai atau sudah di topup", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
+                            Toast.makeText(TopUpActivity.this, "saldo telah ditambahkan" + vocer.getValue().toString(), Toast.LENGTH_SHORT).show();
+
+
+                        } else {
+                            Toast.makeText(TopUpActivity.this, "Kode voucher tidak sesuai atau sudah di topup", Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+                Intent intent = new Intent(TopUpActivity.this, Home.class);
+                intent.putExtra("phoneId",userID);
+                startActivity(intent);
             }
         });
     }
-
+    /*
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == REQUEST_CODE && resultCode == RESULT_OK){
-            if(data != null){
+    protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
+        if(requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+
                 final Barcode barcode = data.getParcelableExtra("barcode");
-                result.post(new Runnable() {
+
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(TopUpActivity.this);
+                alertDialog.setTitle("TopUp Saldo Confirmation");
+
+                LayoutInflater layoutInflater =
+                        (LayoutInflater) getBaseContext()
+                                .getSystemService(LAYOUT_INFLATER_SERVICE);
+
+                Context context = layoutInflater.getContext();
+                LinearLayout layout = new LinearLayout(context);
+                layout.setOrientation(LinearLayout.VERTICAL);
+
+                final TextView text = new TextView(TopUpActivity.this);
+
+                text.setGravity(Gravity.CENTER);
+                layout.addView(text);
+                voucher.child(barcode.displayValue.toString()).addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void run() {
-                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(TopUpActivity.this);
-                        alertDialog.setTitle("TopUp Saldo Confirmation");
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Voucher vocer = dataSnapshot.getValue(Voucher.class);
+                        text.setText("Voucher Amount : " + vocer.getValue().toString());
 
-                        LayoutInflater layoutInflater =
-                                (LayoutInflater)getBaseContext()
-                                        .getSystemService(LAYOUT_INFLATER_SERVICE);
+                    }
 
-                        Context context = layoutInflater.getContext();
-                        LinearLayout layout = new LinearLayout(context);
-                        layout.setOrientation(LinearLayout.VERTICAL);
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-                        final TextView text = new TextView(TopUpActivity.this);
+                    }
+                });
 
-                        text.setGravity(Gravity.CENTER);
-                        layout.addView(text);
+
+                alertDialog.setView(layout);
+
+
+                // Add edit text to alert dialog
+                alertDialog.setIcon(R.drawable.ic_add_shopping_cart_black_24dp);
+
+                alertDialog.setPositiveButton("Isi", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int which) {
                         voucher.child(barcode.displayValue.toString()).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                Voucher vocer = dataSnapshot.getValue(Voucher.class);
-                                text.setText("Voucher Amount : "+vocer.getValue().toString());
+                                final Voucher vocer = dataSnapshot.getValue(Voucher.class);
+                                if (vocer.getStatus().equals("valid")) {
+
+                                    user.child(userID).addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            User users = dataSnapshot.getValue(User.class);
+                                            int total = 0;
+                                            total = Integer.valueOf(users.getSaldo()) + Integer.valueOf(vocer.getValue().toString());
+                                            user.child(userID).child("saldo").setValue(String.valueOf(total));
+                                            result.setText(String.valueOf(total));
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+
+                                    Toast.makeText(TopUpActivity.this, "saldo telah ditambahkan" + vocer.getValue().toString(), Toast.LENGTH_SHORT).show();
+
+
+                                } else {
+                                    Toast.makeText(TopUpActivity.this, "Kode voucher tidak sesuai atau sudah di topup", Toast.LENGTH_SHORT).show();
+
+                                }
                             }
 
                             @Override
@@ -106,58 +256,20 @@ public class TopUpActivity extends AppCompatActivity {
                         });
 
 
-
-
-                        alertDialog.setView(layout);
-
-
-                        // Add edit text to alert dialog
-                        alertDialog.setIcon(R.drawable.ic_add_shopping_cart_black_24dp);
-
-                        alertDialog.setPositiveButton("Isi", new DialogInterface.OnClickListener() {
-
-                            public void onClick(DialogInterface dialog, int which) {
-                                voucher.child(barcode.displayValue.toString()).addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        Voucher vocer = dataSnapshot.getValue(Voucher.class);
-                                        if(vocer.getStatus().equals("valid")){
-                                            Toast.makeText(TopUpActivity.this, "saldo telah ditambahkan"+vocer.getValue().toString(), Toast.LENGTH_SHORT).show();
-                                            user.child(userID).child("saldo").setValue(vocer.getValue().toString());
-
-                                            result.setText(vocer.getValue().toString());
-
-                                        }
-                                        else{
-                                            Toast.makeText(TopUpActivity.this, "Kode voucher tidak sesuai atau sudah di topup", Toast.LENGTH_SHORT).show();
-
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-
-                                    }
-                                });
-
-
-
-                            }
-                        });
-
-                        alertDialog.setNegativeButton("Batal", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int which) {
-                                dialogInterface.dismiss();
-                            }
-                        });
-
-                        alertDialog.show();
-
-
                     }
                 });
+
+                alertDialog.setNegativeButton("Batal", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
+                        dialogInterface.dismiss();
+                    }
+                });
+
+                alertDialog.show();
+
+
             }
-        }
-    }
-}
+
+        }*/}
+
