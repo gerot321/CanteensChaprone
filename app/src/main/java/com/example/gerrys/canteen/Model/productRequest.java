@@ -16,15 +16,15 @@ public class productRequest {
 
     }
 
-    public productRequest(String requestid,String merchantid, String productid, String productname,String quantity,String totalprice,String address,String status) {
+    public productRequest(String requestid, String merchantid, String productid, String productname, String quantity, String totalprice, String address, String status) {
         this.requestid=requestid;
-       this.merchantid=merchantid;
-       this.productid=productid;
-       this.productname=productname;
-       this.quantity=quantity;
-       this.totalprice=totalprice;
-       this.address=address;
-       this.status=status;
+        this.merchantid=merchantid;
+        this.productid=productid;
+        this.productname=productname;
+        this.quantity=quantity;
+        this.totalprice=totalprice;
+        this.address=address;
+        this.status=status;
 
     }
 

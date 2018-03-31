@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="@drawable/bgfive"
     tools:openDrawer="start">
 
     <include
@@ -22,7 +21,7 @@
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_home"
         android:background="@color/overlayBackground"
-        app:itemTextColor="@android:color/white"
+        app:itemTextColor="@android:color/black"
         app:menu="@menu/activity_home_drawer"/>
 
 

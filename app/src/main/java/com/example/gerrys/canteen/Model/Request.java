@@ -6,7 +6,6 @@ import java.util.List;
 public class Request {
     private String phone;
     private String name;
-    private String address;
     private String total;
     private String status;
     private String method;
@@ -16,10 +15,9 @@ public class Request {
     public Request() {
     }
 
-    public Request(String phone, String name, String address, String total, List<Order> product,String status,String method) {
+    public Request(String phone, String name, String total, List<Order> product,String status,String method) {
         this.phone = phone;
         this.name = name;
-        this.address = address;
         this.total = total;
         this.product = product;
         this.status = status; // default is 0, 0 = Order Placed, 1 = Shipping, 2 = Shipped
@@ -55,14 +53,6 @@ public class Request {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     public String getTotal() {

@@ -2,14 +2,18 @@ package com.example.gerrys.canteen;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.CardView;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +21,7 @@ import com.example.gerrys.canteen.Common.Common;
 import com.example.gerrys.canteen.Database.Database;
 import com.example.gerrys.canteen.Model.Order;
 import com.example.gerrys.canteen.Model.Request;
+import com.example.gerrys.canteen.Model.productRequest;
 import com.example.gerrys.canteen.ViewHolder.CartAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,13 +38,12 @@ public class Checkout extends AppCompatActivity {
 
 
     FirebaseDatabase database;
-    DatabaseReference requests;
+    DatabaseReference requests,prodReq,prod;
 
     TextView txtTotalPrice;
-    String addr;
-    AppCompatTextView Address;
-    EditText addrs;
-    CardView Ovo;
+
+
+    CardView Ovo,cod,saldo;
     String Status = " ";
     List<Order> cart = new ArrayList<>();
     String PriCode, orderId;
@@ -55,11 +59,11 @@ public class Checkout extends AppCompatActivity {
         //Firebase
         database = FirebaseDatabase.getInstance();
         requests = database.getReference("Requests");
-        addrs = (EditText)findViewById(R.id.editText);
-
-        Address = (AppCompatTextView)findViewById(R.id.address);
+        prodReq = database.getReference("productReq");
+        prod = database.getReference("Product");
         Ovo = (CardView)findViewById(R.id.ovoPayment);
-
+        cod = (CardView)findViewById(R.id.codPayment);
+        saldo = (CardView)findViewById(R.id.saldoPayment);
 
 
         cart = new Database(this).getCarts();
@@ -71,11 +75,27 @@ public class Checkout extends AppCompatActivity {
             public void onClick(View v) {
                 //Create new request
                 Status = "Waiting Payment";
-                addr = addrs.getText().toString();
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(Checkout.this);
+                alertDialog.setTitle("TopUp Saldo Confirmation");
+
+                LayoutInflater layoutInflater =
+                        (LayoutInflater) getBaseContext()
+                                .getSystemService(LAYOUT_INFLATER_SERVICE);
+
+                Context context = layoutInflater.getContext();
+                LinearLayout layout = new LinearLayout(context);
+                layout.setOrientation(LinearLayout.VERTICAL);
+
+                final TextView text = new TextView(Checkout.this);
+
+                text.setGravity(Gravity.CENTER);
+                layout.addView(text);
+                text.setText("hahahahaha");
+                alertDialog.setView(layout);
+                alertDialog.setIcon(R.drawable.ic_add_shopping_cart_black_24dp);
                 final Request request = new Request(
                         Common.currentUser.getPhone(),
                         Common.currentUser.getName(),
-                        addr,
                         String.valueOf(total),
                         cart,
                         Status,
@@ -90,45 +110,297 @@ public class Checkout extends AppCompatActivity {
                 final ProgressDialog mDialog = new ProgressDialog(Checkout.this);
                 mDialog.setMessage("loading...");
                 mDialog.show();
-                requests.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        // Check if already user phone
-                        if(dataSnapshot.child(orderId.toString()).exists()){
-                            mDialog.dismiss();
 
-                            Toast.makeText(Checkout.this, "Account already exist!", Toast.LENGTH_SHORT).show();
-                        }else {
-                            mDialog.dismiss();
 
-                            requests.child(orderId)
-                                    .setValue(request);
-                            Intent intent = new Intent(orderId).putExtra("cart", (Serializable) cart);
-                            LocalBroadcastManager.getInstance(Checkout.this).sendBroadcast(intent);
+                // Add edit text to alert dialog
+                alertDialog.setIcon(R.drawable.ic_add_shopping_cart_black_24dp);
 
-                            Toast.makeText(Checkout.this, "Account successfully created!", Toast.LENGTH_SHORT).show();
-                            finish();
-                        }
-                    }
+                alertDialog.setPositiveButton("Isi", new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                    public void onClick(DialogInterface dialog, int which) {
+                        requests.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                // Check if already user phone
+                                if(dataSnapshot.child(orderId.toString()).exists()){
+                                    mDialog.dismiss();
 
+                                    Toast.makeText(Checkout.this, "Account already exist!", Toast.LENGTH_SHORT).show();
+                                }else {
+                                    mDialog.dismiss();
+
+                                    requests.child(orderId)
+                                            .setValue(request);
+                                    Intent intent = new Intent(orderId).putExtra("cart", (Serializable) cart);
+                                    LocalBroadcastManager.getInstance(Checkout.this).sendBroadcast(intent);
+
+                                    Toast.makeText(Checkout.this, "Account successfully created!", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                        // Submit to Firebase
+                        new Database(getBaseContext()).clearCart();
+                        Toast.makeText(Checkout.this, "Thank you, your order has been placed", Toast.LENGTH_SHORT).show();
+                        finish();
                     }
                 });
-                // Submit to Firebase
 
+                alertDialog.setNegativeButton("Batal", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
+                        dialogInterface.dismiss();
+                    }
+                });
 
+                alertDialog.show();
                 //Clear cart
-                new Database(getBaseContext()).clearCart();
-                Toast.makeText(Checkout.this, "Thank you, your order has been placed", Toast.LENGTH_SHORT).show();
-                finish();
+
             }
         });
 
+        saldo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Status = "Confirmed Order";
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(Checkout.this);
+                alertDialog.setTitle("TopUp Saldo Confirmation");
 
+                LayoutInflater layoutInflater =
+                        (LayoutInflater) getBaseContext()
+                                .getSystemService(LAYOUT_INFLATER_SERVICE);
+
+                Context context = layoutInflater.getContext();
+                LinearLayout layout = new LinearLayout(context);
+                layout.setOrientation(LinearLayout.VERTICAL);
+
+                final TextView text = new TextView(Checkout.this);
+
+                text.setGravity(Gravity.CENTER);
+                layout.addView(text);
+                text.setText("hahahahaha");
+                alertDialog.setView(layout);
+                alertDialog.setIcon(R.drawable.ic_add_shopping_cart_black_24dp);
+                final Request request = new Request(
+                        Common.currentUser.getPhone(),
+                        Common.currentUser.getName(),
+                        String.valueOf(total),
+                        cart,
+                        Status,
+                        "saldo"
+                );
+
+
+                Random r = new Random();
+                int unic = r.nextInt(80 - 1) + 1;
+                PriCode = Common.currentUser.getPhone();
+                orderId = PriCode+Integer.toString(unic);
+                final ProgressDialog mDialog = new ProgressDialog(Checkout.this);
+                mDialog.setMessage("loading...");
+                mDialog.show();
+
+                // Submit to Firebase
+
+
+                alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int which) {
+                        //Clear cart
+                        requests.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                // Check if already user phone
+                                if(dataSnapshot.child(orderId.toString()).exists()){
+                                    mDialog.dismiss();
+
+                                    Toast.makeText(Checkout.this, "Account already exist!", Toast.LENGTH_SHORT).show();
+                                }else {
+                                    mDialog.dismiss();
+
+                                    requests.child(orderId).setValue(request);
+                                    requests.child(orderId.toString()).child("product").addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            for (DataSnapshot child: dataSnapshot.getChildren()) {
+                                                final Order orders = child.getValue(Order.class);
+                                                prod.child(orders.getProductId().toString()).child("MerchantId").addValueEventListener(new ValueEventListener() {
+                                                    @Override
+
+                                                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                                        productRequest req= new productRequest(orderId.toString(),dataSnapshot.getValue().toString(),orders.getProductId(),
+                                                                orders.getProductName().toString(),orders.getQuantity().toString()
+                                                                ,orders.getPrice().toString(),orders.getAddress(),"diteruskan ke merchant") ;
+                                                        prodReq.push().setValue(req);
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(DatabaseError databaseError) {
+
+                                                    }
+                                                });
+
+                                            }
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+                                    Intent intent = new Intent(orderId).putExtra("cart", (Serializable) cart);
+                                    LocalBroadcastManager.getInstance(Checkout.this).sendBroadcast(intent);
+
+                                    Toast.makeText(Checkout.this, "Order has been proceed", Toast.LENGTH_SHORT).show();
+
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                        new Database(getBaseContext()).clearCart();
+                        Toast.makeText(Checkout.this, "Thank you, your order has been placed", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                });
+
+                alertDialog.setNegativeButton("Batal", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
+                        dialogInterface.dismiss();
+                    }
+                });
+
+                alertDialog.show();
+            }
+        });
+
+        cod.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Status = "Confirmed Order";
+
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(Checkout.this);
+                alertDialog.setTitle("TopUp Saldo Confirmation");
+
+                LayoutInflater layoutInflater =
+                        (LayoutInflater) getBaseContext()
+                                .getSystemService(LAYOUT_INFLATER_SERVICE);
+
+                Context context = layoutInflater.getContext();
+                LinearLayout layout = new LinearLayout(context);
+                layout.setOrientation(LinearLayout.VERTICAL);
+
+                final TextView text = new TextView(Checkout.this);
+
+                text.setGravity(Gravity.CENTER);
+                layout.addView(text);
+                text.setText("hahahahaha");
+                alertDialog.setView(layout);
+                alertDialog.setIcon(R.drawable.ic_add_shopping_cart_black_24dp);
+                final Request request = new Request(
+                        Common.currentUser.getPhone(),
+                        Common.currentUser.getName(),
+                        String.valueOf(total),
+                        cart,
+                        Status,
+                        "cash on delivery"
+                );
+
+
+                Random r = new Random();
+                int unic = r.nextInt(80 - 1) + 1;
+                PriCode = Common.currentUser.getPhone();
+                orderId = PriCode+Integer.toString(unic);
+
+
+
+
+
+                alertDialog.setPositiveButton("Isi", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int which) {
+                        //Clear cart
+                        requests.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                // Check if already user phone
+                                if(dataSnapshot.child(orderId.toString()).exists()){
+                                    Toast.makeText(Checkout.this, "Account already exist!", Toast.LENGTH_SHORT).show();
+                                }else {
+
+                                    requests.child(orderId).setValue(request);
+                                    requests.child(orderId.toString()).child("product").addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            for (DataSnapshot child: dataSnapshot.getChildren()) {
+                                                final Order orders = child.getValue(Order.class);
+                                                prod.child(orders.getProductId().toString()).child("MerchantId").addValueEventListener(new ValueEventListener() {
+                                                    @Override
+
+                                                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                                        productRequest req= new productRequest(orderId.toString(),dataSnapshot.getValue().toString(),orders.getProductId(),
+                                                                orders.getProductName().toString(),orders.getQuantity().toString()
+                                                                ,orders.getPrice().toString(),orders.getAddress(),"diteruskan ke merchant") ;
+                                                        prodReq.push().setValue(req);
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(DatabaseError databaseError) {
+
+                                                    }
+                                                });
+
+                                            }
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+                                    Intent intent = new Intent(orderId).putExtra("cart", (Serializable) cart);
+                                    LocalBroadcastManager.getInstance(Checkout.this).sendBroadcast(intent);
+                                    Toast.makeText(Checkout.this, "Account successfully created!", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                        // Submit to Firebase
+                        new Database(getBaseContext()).clearCart();
+                        Toast.makeText(Checkout.this, "Thank you, your order has been placed", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                });
+
+                alertDialog.setNegativeButton("Batal", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
+                        dialogInterface.dismiss();
+                    }
+                });
+
+                alertDialog.show();
+
+            }
+        });
 
     }
+
 
 
 

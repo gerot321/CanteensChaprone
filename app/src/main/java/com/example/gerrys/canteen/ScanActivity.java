@@ -22,7 +22,7 @@ public class ScanActivity extends AppCompatActivity implements BarcodeReader.Bar
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan);
-        userID = getIntent().getStringExtra("userID");
+        userID = getIntent().getStringExtra("phoneId");
 
 
         // get the barcode reader instance

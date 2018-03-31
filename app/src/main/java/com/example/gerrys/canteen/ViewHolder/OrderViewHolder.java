@@ -7,13 +7,10 @@ import android.widget.TextView;
 import com.example.gerrys.canteen.Interface.ItemClickListener;
 import com.example.gerrys.canteen.R;
 
-/**
- * Created by Cj_2 on 2017-11-27.
- */
 
 public class OrderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-    public TextView txtOrderId, txtOrderStatus, txtOrderPhone, txtOrderAddress;
+    public TextView txtOrderId, txtOrderStatus, txtOrderPhone, txtOrderMethod, txtOrderTotal;
 
     private ItemClickListener itemClickListener;
 
@@ -23,10 +20,9 @@ public class OrderViewHolder extends RecyclerView.ViewHolder implements View.OnC
         txtOrderId = (TextView)itemView.findViewById(R.id.order_id);
         txtOrderStatus = (TextView)itemView.findViewById(R.id.order_status);
         txtOrderPhone = (TextView)itemView.findViewById(R.id.order_phone);
-        txtOrderAddress = (TextView)itemView.findViewById(R.id.order_address);
-
+        txtOrderMethod = (TextView)itemView.findViewById(R.id.order_method);
+        txtOrderTotal = (TextView)itemView.findViewById(R.id.order_total);
         itemView.setOnClickListener(this);
-
     }
 
     public void setItemClickListener(ItemClickListener itemClickListener) {

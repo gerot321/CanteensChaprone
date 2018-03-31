@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/bgfive"
     android:padding="16dp"
-    tools:context="com.example.gerrys.onlinecanteen.Cart">
+    tools:context="com.example.gerrys.canteen.Cart">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/listCart"

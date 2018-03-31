@@ -5,30 +5,48 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="vision.google.com.qrcodescanner.MainActivity">
+    tools:context="com.example.gerrys.canteen.TopUpActivity">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@drawable/gra_white"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:theme="@style/Theme.Samita.Toolbar"/>
-    <Button
-        android:id="@+id/scanbtn"
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@drawable/gra_white"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                />
+        </android.support.design.widget.AppBarLayout>
+    <EditText
+        android:id="@+id/editText2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="SCAN"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"/>
+        android:layout_above="@+id/result"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="24dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Code Voucher" />
+
     <TextView
         android:id="@+id/result"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/scanbtn"
-        android:layout_marginTop="5dp"
-        android:layout_centerHorizontal="true"
-        android:textSize="25sp"
+        android:layout_above="@+id/scanbtn"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="100dp"
+        android:gravity="center_horizontal"
         android:padding="5dp"
-        android:gravity="center_horizontal"/>
+        android:textSize="25sp" />
+
+    <Button
+        android:id="@+id/scanbtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="154dp"
+        android:text="Top Up" />
 </RelativeLayout>
