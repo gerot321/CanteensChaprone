@@ -5,6 +5,7 @@ public class User {
     private String Password;
     private String Phone;
     private String Status;
+    private String email;
     private String saldo;
     private String address;
     private String gender;
@@ -16,7 +17,7 @@ public class User {
 
     }
 
-    public User(String name, String password,String status,String saldo,String address,String gender,String tanggalLahir,String hobi, String profesi,String image) {
+    public User(String name, String password,String status,String saldo,String address,String gender,String tanggalLahir,String hobi, String profesi,String image,String email) {
         this.name = name;
         Password = password;
         Status = status;
@@ -27,6 +28,15 @@ public class User {
         this.hobi=hobi;
         this.profesi=profesi;
         this.image=image;
+        this.email=email;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getAddress() {

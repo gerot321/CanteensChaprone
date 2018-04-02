@@ -25,7 +25,7 @@ import java.util.Locale;
 
 public class SignUp extends AppCompatActivity {
 
-    MaterialEditText etPhone, etName, etPassword,etDate,etAddress;
+    MaterialEditText etPhone, etName, etPassword,etDate,etAddress,etEmail;
     RadioButton radio;
     RadioGroup groups;
     Button btnSignUp;
@@ -44,6 +44,7 @@ public class SignUp extends AppCompatActivity {
         radio= (RadioButton)findViewById(R.id.radioButton);
         groups =(RadioGroup)findViewById(R.id.radioGroup);
         btnSignUp = (Button) findViewById(R.id.btnSignUp);
+        etEmail=(MaterialEditText)findViewById(R.id.etEmail);
         dateFormatter = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
         // I
         // nitialize firebase
@@ -82,7 +83,7 @@ public class SignUp extends AppCompatActivity {
                             int select = groups.getCheckedRadioButtonId();
                             radio= (RadioButton)findViewById(select);
                             User user = new User(etName.getText().toString(), etPassword.getText().toString(), "Costumer","0",etAddress.getText().toString(),radio.getText().toString(),
-                                    etDate.getText().toString()," "," "," ");
+                                    etDate.getText().toString()," "," "," ",etEmail.getText().toString());
                             table_user.child(etPhone.getText().toString()).setValue(user);
                             Toast.makeText(SignUp.this, "Account successfully created!", Toast.LENGTH_SHORT).show();
                             finish();

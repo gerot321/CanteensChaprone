@@ -8,6 +8,7 @@
     tools:context="com.example.gerrys.canteen.Checkout">
 
     <android.support.v7.widget.CardView
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginRight="8dp"
@@ -79,6 +80,7 @@
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
+            android:id="@+id/privateprofile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
@@ -136,6 +138,7 @@
         </android.support.v7.widget.CardView>
 
     <android.support.v7.widget.CardView
+        android:id="@+id/detailprofile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
