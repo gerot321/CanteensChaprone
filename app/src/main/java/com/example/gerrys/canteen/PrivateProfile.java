@@ -40,8 +40,8 @@ public class PrivateProfile extends AppCompatActivity {
         et.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // Users.child(ID).child("address").setValue(address.getText().toString());
-               // Users.child(ID).child("email").setValue(email.getText().toString());
+                Users.child(ID).child("address").setValue(address.getText().toString());
+                Users.child(ID).child("email").setValue(email.getText().toString());
                 Intent intent = new Intent(PrivateProfile.this,UserProfile.class);
                 intent.putExtra("phoneId",ID);
                 startActivity(intent);

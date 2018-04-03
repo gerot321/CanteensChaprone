@@ -62,6 +62,7 @@ public class Home extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Home.this, Cart.class);
+                intent.putExtra("userID", ID );
                 startActivity(intent);
             }
         });
@@ -291,6 +292,7 @@ public class Home extends AppCompatActivity
 
         } else if (id == R.id.nav_cart) {
             Intent intent = new Intent(Home.this, Cart.class);
+            intent.putExtra("userID", ID );
             startActivity(intent);
         } else if (id == R.id.nav_orders) {
             Intent intent = new Intent(Home.this, OrderStatus.class);
@@ -324,6 +326,7 @@ public class Home extends AppCompatActivity
                 return true;
             case R.id.cart:
                 Intent ia = new Intent(this,Cart.class);
+                ia.putExtra("userID", ID );
                 this.startActivity(ia);
             default:
                 return super.onOptionsItemSelected(item);

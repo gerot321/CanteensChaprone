@@ -36,6 +36,7 @@ public class Cart extends AppCompatActivity {
     List<Order> cart = new ArrayList<>();
     String PriCode, orderId;
     CartAdapter adapter;
+    String ID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +46,7 @@ public class Cart extends AppCompatActivity {
         //Firebase
         database = FirebaseDatabase.getInstance();
         requests = database.getReference("Requests");
-
+        ID = getIntent().getStringExtra("userID");
         //Init
         recyclerView = (RecyclerView)findViewById(R.id.listCart);
         recyclerView.setHasFixedSize(true);
@@ -61,6 +62,7 @@ public class Cart extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Cart.this, Checkout.class);
+                intent.putExtra("userID",ID);
                 startActivity(intent);
             }
         });

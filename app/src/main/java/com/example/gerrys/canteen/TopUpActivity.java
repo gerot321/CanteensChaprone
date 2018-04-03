@@ -69,14 +69,7 @@ public class TopUpActivity extends AppCompatActivity {
 
                 }
             });
-
-
-
-
-
-        }
-
-
+       }
 
        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
            @Override
