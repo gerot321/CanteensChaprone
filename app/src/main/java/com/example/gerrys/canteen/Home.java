@@ -1,5 +1,6 @@
 package com.example.gerrys.canteen;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -14,8 +15,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.gerrys.canteen.Interface.ItemClickListener;
 import com.example.gerrys.canteen.Model.Category;
@@ -41,6 +45,7 @@ public class Home extends AppCompatActivity
     RecyclerView.LayoutManager layoutManager;
 
     FirebaseRecyclerAdapter<Category, MenuViewHolder> adapter;
+    private Dialog MyDialog;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,6 +118,34 @@ public class Home extends AppCompatActivity
         recycler_menu.setLayoutManager(layoutManager);
 
         loadMenu();
+        final String barcode = getIntent().getStringExtra("code");
+        if(barcode != null){
+            MyDialog = new Dialog(Home.this);
+            MyDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            MyDialog.setContentView(R.layout.dialog);
+            MyDialog.setTitle("My Custom Dialog");
+
+            Button hello = (Button) MyDialog.findViewById(R.id.oke12);
+            Button close = (Button) MyDialog.findViewById(R.id.cancan);
+
+            hello.setEnabled(true);
+            close.setEnabled(true);
+
+            hello.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getApplicationContext(), "Hello, I'm Custom Alert Dialog", Toast.LENGTH_LONG).show();
+                }
+            });
+            close.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    MyDialog.cancel();
+                }
+            });
+
+            MyDialog.show();
+        }
     }
 
     private void loadMenu() {
@@ -322,6 +355,8 @@ public class Home extends AppCompatActivity
         switch (item.getItemId()) {
             case R.id.qr:
                 Intent i = new Intent(this,ScanActivity.class);
+                i.putExtra("phoneId", ID );
+                i.putExtra("activity","add");
                 this.startActivity(i);
                 return true;
             case R.id.cart:
@@ -331,6 +366,9 @@ public class Home extends AppCompatActivity
             default:
                 return super.onOptionsItemSelected(item);
         }
+
+    }
+    public void MyCustomAlertDialog(){
 
     }
 }

@@ -17,13 +17,13 @@ public class ScanActivity extends AppCompatActivity implements BarcodeReader.Bar
 
     BarcodeReader barcodeReader;
     String userID=" ";
-
+    String activitys = " ";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan);
         userID = getIntent().getStringExtra("phoneId");
-
+        activitys = getIntent().getStringExtra("activity");
 
         // get the barcode reader instance
         barcodeReader = (BarcodeReader) getSupportFragmentManager().findFragmentById(R.id.barcode_scanner);
@@ -34,12 +34,20 @@ public class ScanActivity extends AppCompatActivity implements BarcodeReader.Bar
 
         // playing barcode reader beep sound
         barcodeReader.playBeep();
-
+        if(activitys.equals("add")){
+            Intent intent = new Intent(ScanActivity.this, Home.class);
+            intent.putExtra("code", barcode.displayValue);
+            intent.putExtra("phoneId",userID);
+            startActivity(intent);
+        }
+        else if (activitys.equals("topup")){
+            Intent intent = new Intent(ScanActivity.this, TopUpActivity.class);
+            intent.putExtra("code", barcode.displayValue);
+            intent.putExtra("userID",userID);
+            startActivity(intent);
+        }
         // ticket details activity by passing barcode
-        Intent intent = new Intent(ScanActivity.this, TopUpActivity.class);
-        intent.putExtra("code", barcode.displayValue);
-        intent.putExtra("userID",userID);
-        startActivity(intent);
+
     }
 
     @Override

@@ -241,6 +241,7 @@ public class Checkout extends AppCompatActivity {
                                                                             orders.getProductName().toString(),orders.getQuantity().toString()
                                                                             ,orders.getPrice().toString(),orders.getAddress(),"diteruskan ke merchant") ;
                                                                     prodReq.push().setValue(req);
+                                                                    finish();
                                                                 }
 
                                                                 @Override
@@ -258,8 +259,6 @@ public class Checkout extends AppCompatActivity {
 
                                                     }
                                                 });
-                                                Intent intent = new Intent(orderId).putExtra("cart", (Serializable) cart);
-                                                LocalBroadcastManager.getInstance(Checkout.this).sendBroadcast(intent);
                                                 Toast.makeText(Checkout.this, "Account successfully created!", Toast.LENGTH_SHORT).show();
                                             }
                                         }
@@ -272,7 +271,7 @@ public class Checkout extends AppCompatActivity {
                                     // Submit to Firebase
                                     new Database(getBaseContext()).clearCart();
                                     Toast.makeText(Checkout.this, "Thank you, your order has been placed", Toast.LENGTH_SHORT).show();
-                                    finish();
+
                                 }
                             });
 

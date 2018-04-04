@@ -190,6 +190,7 @@ public class TopUpActivity extends AppCompatActivity {
             case R.id.qrTopup:
                 Intent i = new Intent(this,ScanActivity.class);
                 i.putExtra("phoneId",userID);
+                i.putExtra("activity","topup");
                 this.startActivity(i);
                 return true;
             default:
