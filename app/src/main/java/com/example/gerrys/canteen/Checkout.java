@@ -132,8 +132,6 @@ public class Checkout extends AppCompatActivity {
 
                                     requests.child(orderId)
                                             .setValue(request);
-                                    Intent intent = new Intent(orderId).putExtra("cart", (Serializable) cart);
-                                    LocalBroadcastManager.getInstance(Checkout.this).sendBroadcast(intent);
 
                                     Toast.makeText(Checkout.this, "Account successfully created!", Toast.LENGTH_SHORT).show();
                                 }
@@ -147,7 +145,9 @@ public class Checkout extends AppCompatActivity {
                         // Submit to Firebase
                         new Database(getBaseContext()).clearCart();
                         Toast.makeText(Checkout.this, "Thank you, your order has been placed", Toast.LENGTH_SHORT).show();
-                        finish();
+                        Intent intent = new Intent(Checkout.this,CheckoutInfo.class);
+                        intent.putExtra("userID",ID);
+                        startActivity(intent);
                     }
                 });
 

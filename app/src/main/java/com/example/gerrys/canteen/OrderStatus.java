@@ -1,11 +1,14 @@
 package com.example.gerrys.canteen;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.example.gerrys.canteen.Common.Common;
+import com.example.gerrys.canteen.Interface.ItemClickListener;
 import com.example.gerrys.canteen.Model.Request;
 import com.example.gerrys.canteen.ViewHolder.OrderViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -53,7 +56,14 @@ public class OrderStatus extends AppCompatActivity {
                 viewHolder.txtOrderPhone.setText(model.getPhone());
                 viewHolder.txtOrderMethod.setText(model.getPaymentMethod());
                 viewHolder.txtOrderTotal.setText(model.getTotal());
-
+                viewHolder.setItemClickListener(new ItemClickListener() {
+                    @Override
+                    public void onClick(View view, int position, boolean isLongCLick) {
+                        Intent i =  new Intent(OrderStatus.this,OrderStatusDetail.class);
+                        i.putExtra("key",adapter.getRef(position).getKey());
+                        startActivity(i);
+                    }
+                });
             }
         };
 

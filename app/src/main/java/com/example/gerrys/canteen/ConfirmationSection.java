@@ -144,9 +144,10 @@ public class ConfirmationSection extends AppCompatActivity  {
                                         public void run() {
                                             mProgressBar.setProgress(0);
                                         }
-                                    }, 200);
+                                    }, 0);
                                     Toast.makeText(ConfirmationSection.this, "Upload successful", Toast.LENGTH_SHORT).show();
-                                    final Intent intent = new Intent(ConfirmationSection.this,ShoeList.class);
+                                    final Intent intent = new Intent(ConfirmationSection.this,Home.class);
+                                    intent.putExtra("phoneId",ID);
                                     startActivity(intent);
                                     confirmations.addValueEventListener(new ValueEventListener() {
                                         @Override

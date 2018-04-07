@@ -37,6 +37,7 @@ public class TopUpActivity extends AppCompatActivity {
     DatabaseReference user;
     DatabaseReference voucher;
     Toolbar mToolbar;
+
     String statsaldo = "ngga";
     public static final int REQUEST_CODE = 100;
     public static final int PERMISSION_REQUEST = 200;

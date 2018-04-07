@@ -16,13 +16,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.SearchView;
+import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.gerrys.canteen.Database.Database;
 import com.example.gerrys.canteen.Interface.ItemClickListener;
 import com.example.gerrys.canteen.Model.Category;
+import com.example.gerrys.canteen.Model.Order;
+import com.example.gerrys.canteen.Model.Shoe;
 import com.example.gerrys.canteen.Model.User;
 import com.example.gerrys.canteen.ViewHolder.MenuViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -37,9 +43,14 @@ public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     FirebaseDatabase database;
-    DatabaseReference category,user;
+    DatabaseReference category,user,prod;
 
-    TextView txtFullName,saldo;
+    Spinner spin;
+    ImageView iamge;
+    EditText edit;
+
+    String addr = " ";
+    TextView txtFullName,saldo,productname;
     String ID;
     RecyclerView recycler_menu;
     RecyclerView.LayoutManager layoutManager;
@@ -59,6 +70,7 @@ public class Home extends AppCompatActivity
         // Init firebase
         database = FirebaseDatabase.getInstance();
         category = database.getReference("Category");
+        prod = database.getReference("Product");
         user = database.getReference("User");
 
 
@@ -127,6 +139,30 @@ public class Home extends AppCompatActivity
 
             Button hello = (Button) MyDialog.findViewById(R.id.oke12);
             Button close = (Button) MyDialog.findViewById(R.id.cancan);
+            iamge = (ImageView)MyDialog.findViewById(R.id.lol);
+
+            spin = (Spinner) MyDialog.findViewById(R.id.spinner);
+            edit = (EditText) MyDialog.findViewById(R.id.dit);
+            String[] Des = {"GedungA", "GedungB", "GedungC", "GedungD", "GedungE", "GedungF", "FJ", "DP"};
+
+            ArrayAdapter< String > adapter = new ArrayAdapter<String>(Home.this, android.R.layout.simple_spinner_item, Des);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spin.setAdapter(adapter);
+            prod.child(barcode).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    final Shoe prods = dataSnapshot.getValue(Shoe.class);
+                    productname = (TextView)MyDialog.findViewById(R.id.namepro);
+                    productname.setText(prods.getName());
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
 
             hello.setEnabled(true);
             close.setEnabled(true);
@@ -134,7 +170,71 @@ public class Home extends AppCompatActivity
             hello.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getApplicationContext(), "Hello, I'm Custom Alert Dialog", Toast.LENGTH_LONG).show();
+                    prod.child(barcode).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            final Shoe prods = dataSnapshot.getValue(Shoe.class);
+
+                            category.child(prods.getMerchantId()).child("origin").addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    String origin = dataSnapshot.getValue().toString();
+                                    addr = spin.getSelectedItem().toString()+edit.getText().toString();
+                                    String gedung = spin.getSelectedItem().toString();
+                                    int total=0;
+
+                                    if (origin.equals("FJ") && gedung.equals("GedungA")) {
+                                        total = (Integer.parseInt(prods.getPrice()))+2000;
+                                    }
+                                    else if (origin.equals("FJ") && gedung.equals("GedungB")){
+                                        total = (Integer.parseInt(prods.getPrice()))+2000;
+
+                                      } else if (origin.equals("FJ") && gedung.equals("GedungC")){
+                                        total = (Integer.parseInt(prods.getPrice()))+2000;
+
+                                    } else if (origin.equals("FJ") && gedung.equals("GedungD")){
+                                        total = (Integer.parseInt(prods.getPrice()))+4000;
+
+                                    } else if (origin.equals("FJ") && gedung.equals("GedungE")){
+                                        total = (Integer.parseInt(prods.getPrice()))+5000;
+
+                                    } else if (origin.equals("FJ") && gedung.equals("GedungF")){
+                                        total = (Integer.parseInt(prods.getPrice()))+5000;
+
+                                    } else if (origin.equals("FJ") && gedung.equals("DP")){
+                                        total = (Integer.parseInt(prods.getPrice()))+3000;
+
+                                    } else if (origin.equals("FJ") && gedung.equals("FJ")){
+                                        total = (Integer.parseInt(prods.getPrice()))+1000;
+
+                                    }
+
+
+                                    new Database(getBaseContext()).addToCart(new Order(
+                                            barcode,
+                                            prods.getName(),
+                                            "1",
+                                            String.valueOf(total),
+                                            addr
+                                    ));
+
+                                    //category.child("status").setValue("Waiting Admin Confirmation");
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                    //handle databaseError
+                                }
+                            });
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                    MyDialog.dismiss();
                 }
             });
             close.setOnClickListener(new View.OnClickListener() {

@@ -13,7 +13,6 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -26,7 +25,9 @@
         <activity android:name=".ShoeList" />
         <activity android:name=".ShoeDetail" />
         <activity android:name=".Cart" />
+        <activity android:name=".OrderStatusDetail" />
         <activity android:name=".Checkout" />
+        <activity android:name=".CheckoutInfo" />
         <activity android:name=".ConfirmationSection" />
         <activity android:name=".TopUpActivity" />
         <activity android:name=".ScanActivity"></activity>

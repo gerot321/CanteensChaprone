@@ -6,6 +6,7 @@
     android:orientation="vertical">
 
     <ImageView
+        android:id="@+id/lol"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_gravity="center"
@@ -18,7 +19,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="35dp"
-        android:text="@string/app_name"
         android:textSize="18sp" />
     <TextView
         android:layout_width="wrap_content"
@@ -36,7 +36,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Detail alamat" />
+        android:hint="Detail alamat"
+        android:id="@+id/dit"/>
 
     <FrameLayout
         android:layout_width="match_parent"
