@@ -4,14 +4,24 @@ package com.example.gerrys.canteen.Model;
 public class Category {
     private String Name;
     private String Image;
+    private String Origin;
 
     public Category(){
 
     }
 
-    public Category(String name, String image) {
+    public Category(String name, String image,String origin) {
         Name = name;
         Image = image;
+        Origin = origin;
+    }
+
+    public String getOrigin() {
+        return Origin;
+    }
+
+    public void setOrigin(String origin) {
+        Origin = origin;
     }
 
     public String getName() {
