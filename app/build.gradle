@@ -54,4 +54,5 @@ dependencies {
     implementation 'info.androidhive:barcode-reader:1.1.5'
 }
 
+
 apply plugin: 'com.google.gms.google-services'

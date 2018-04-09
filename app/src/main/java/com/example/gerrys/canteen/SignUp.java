@@ -2,6 +2,7 @@ package com.example.gerrys.canteen;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -95,10 +96,12 @@ public class SignUp extends AppCompatActivity {
                             radio= (RadioButton)findViewById(select);
                             sendCode(v);
                             User user = new User(etName.getText().toString(), etPassword.getText().toString(), "Costumer","0",etAddress.getText().toString(),radio.getText().toString(),
-                                    etDate.getText().toString()," "," "," ",etEmail.getText().toString());
+                                    etDate.getText().toString()," "," "," ",etEmail.getText().toString(),"unVerified");
                             table_user.child(etPhone.getText().toString()).setValue(user);
                             Toast.makeText(SignUp.this, "Account successfully created!", Toast.LENGTH_SHORT).show();
-                            finish();
+                            Intent I = new Intent(SignUp.this,SmsVerify.class);
+                            I.putExtra("Phone",etPhone.getText().toString());
+                            startActivity(I);
                         }
                     }
 
@@ -180,10 +183,13 @@ public class SignUp extends AppCompatActivity {
 
                         if (e instanceof FirebaseAuthInvalidCredentialsException) {
                             // Invalid request
-                            Log.d(TAG, "Invalid credential: "
-                                    + e.getLocalizedMessage());
+
+                            Toast.makeText(SignUp.this, "Invalid credential: "
+                                    + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+
                         } else if (e instanceof FirebaseTooManyRequestsException) {
                             // SMS quota exceeded
+                            Toast.makeText(SignUp.this, "SMS Quota exceeded.", Toast.LENGTH_SHORT).show();
                             Log.d(TAG, "SMS Quota exceeded.");
                         }
                     }

@@ -35,6 +35,8 @@
         <activity android:name=".UserProfile"></activity>
         <activity android:name=".detailProfile"/>
         <activity android:name=".PrivateProfile"/>
+        <activity android:name=".SmsVerify"/>
+
 
     </application>
 

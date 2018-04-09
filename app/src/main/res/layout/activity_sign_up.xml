@@ -25,7 +25,7 @@
             android:textColorHint="@android:color/white"
             android:textSize="12sp"
             app:met_floatingLabel="highlight"
-            app:met_maxCharacters="13"
+            app:met_maxCharacters="15"
             app:met_singleLineEllipsis="true" />
 
         <com.rengwuxian.materialedittext.MaterialEditText

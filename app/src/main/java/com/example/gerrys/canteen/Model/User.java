@@ -13,11 +13,12 @@ public class User {
     private String hobi;
     private String profesi;
     private String image;
+    private String verified;
     public User(){
 
     }
 
-    public User(String name, String password,String status,String saldo,String address,String gender,String tanggalLahir,String hobi, String profesi,String image,String email) {
+    public User(String name, String password,String status,String saldo,String address,String gender,String tanggalLahir,String hobi, String profesi,String image,String email,String verified) {
         this.name = name;
         Password = password;
         Status = status;
@@ -29,6 +30,7 @@ public class User {
         this.profesi=profesi;
         this.image=image;
         this.email=email;
+        this.verified=verified;
     }
 
     public String getEmail() {
@@ -53,6 +55,18 @@ public class User {
 
     public String getHobi() {
         return hobi;
+    }
+
+    public String getVerified() {
+        return verified;
+    }
+
+    public void setVerified(String verified) {
+        this.verified = verified;
+    }
+
+    public void setStatus(String status) {
+        Status = status;
     }
 
     public String getProfesi() {
@@ -124,4 +138,6 @@ public class User {
     public void setUserStatus(String status) {
         Status = status;
     }
+
+
 }
