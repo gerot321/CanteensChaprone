@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -12,6 +13,11 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.gerrys.canteen.Model.User;
+import com.google.firebase.FirebaseException;
+import com.google.firebase.FirebaseTooManyRequestsException;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,13 +28,18 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class SignUp extends AppCompatActivity {
-
+    private static final String TAG = "PhoneAuth";
     MaterialEditText etPhone, etName, etPassword,etDate,etAddress,etEmail;
     RadioButton radio;
     RadioGroup groups;
     Button btnSignUp;
+    private String phoneVerificationId;
+    private PhoneAuthProvider.ForceResendingToken resendToken;
+    private PhoneAuthProvider.OnVerificationStateChangedCallbacks
+            verificationCallbacks;
     private DatePickerDialog datePickerDialog;
     private SimpleDateFormat dateFormatter;
     @Override
@@ -64,7 +75,7 @@ public class SignUp extends AppCompatActivity {
         });
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
 
                 final ProgressDialog mDialog = new ProgressDialog(SignUp.this);
                 mDialog.setMessage("loading...");
@@ -82,6 +93,7 @@ public class SignUp extends AppCompatActivity {
                             mDialog.dismiss();
                             int select = groups.getCheckedRadioButtonId();
                             radio= (RadioButton)findViewById(select);
+                            sendCode(v);
                             User user = new User(etName.getText().toString(), etPassword.getText().toString(), "Costumer","0",etAddress.getText().toString(),radio.getText().toString(),
                                     etDate.getText().toString()," "," "," ",etEmail.getText().toString());
                             table_user.child(etPhone.getText().toString()).setValue(user);
@@ -137,5 +149,53 @@ public class SignUp extends AppCompatActivity {
          * Tampilkan DatePicker dialog
          */
         datePickerDialog.show();
+    }
+    public void sendCode(View view) {
+
+        String phoneNumber = etPhone.getText().toString();
+
+        setUpVerificatonCallbacks();
+
+        PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                phoneNumber,        // Phone number to verify
+                60,                 // Timeout duration
+                TimeUnit.SECONDS,   // Unit of timeout
+                this,               // Activity (for callback binding)
+                verificationCallbacks);
+    }
+    private void setUpVerificatonCallbacks() {
+
+        verificationCallbacks =
+                new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+
+                    @Override
+                    public void onVerificationCompleted(
+                            PhoneAuthCredential credential) {
+
+
+                    }
+
+                    @Override
+                    public void onVerificationFailed(FirebaseException e) {
+
+                        if (e instanceof FirebaseAuthInvalidCredentialsException) {
+                            // Invalid request
+                            Log.d(TAG, "Invalid credential: "
+                                    + e.getLocalizedMessage());
+                        } else if (e instanceof FirebaseTooManyRequestsException) {
+                            // SMS quota exceeded
+                            Log.d(TAG, "SMS Quota exceeded.");
+                        }
+                    }
+
+                    @Override
+                    public void onCodeSent(String verificationId,
+                                           PhoneAuthProvider.ForceResendingToken token) {
+
+                        phoneVerificationId = verificationId;
+                        resendToken = token;
+
+                    }
+                };
     }
 }

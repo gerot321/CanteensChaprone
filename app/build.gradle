@@ -48,6 +48,9 @@ dependencies {
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
     compile 'com.pixplicity.letterpress:library:1.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'com.google.firebase:firebase-auth:11.0.2'
+    compile 'com.firebaseui:firebase-ui:2.0.1'
+    compile 'com.firebaseui:firebase-ui-auth:2.0.1'
     implementation 'info.androidhive:barcode-reader:1.1.5'
 }
 
