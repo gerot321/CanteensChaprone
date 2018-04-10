@@ -182,30 +182,39 @@ public class Home extends AppCompatActivity
                                     addr = spin.getSelectedItem().toString()+edit.getText().toString();
                                     String gedung = spin.getSelectedItem().toString();
                                     int total=0;
+                                    String ShippingPrice = " ";
 
                                     if (origin.equals("FJ") && gedung.equals("GedungA")) {
                                         total = (Integer.parseInt(prods.getPrice()))+2000;
+                                        ShippingPrice = "2000";
                                     }
                                     else if (origin.equals("FJ") && gedung.equals("GedungB")){
                                         total = (Integer.parseInt(prods.getPrice()))+2000;
+                                        ShippingPrice = "2000";
 
                                       } else if (origin.equals("FJ") && gedung.equals("GedungC")){
                                         total = (Integer.parseInt(prods.getPrice()))+2000;
+                                        ShippingPrice = "2000";
 
                                     } else if (origin.equals("FJ") && gedung.equals("GedungD")){
                                         total = (Integer.parseInt(prods.getPrice()))+4000;
+                                        ShippingPrice = "4000";
 
                                     } else if (origin.equals("FJ") && gedung.equals("GedungE")){
                                         total = (Integer.parseInt(prods.getPrice()))+5000;
+                                        ShippingPrice = "5000";
 
                                     } else if (origin.equals("FJ") && gedung.equals("GedungF")){
                                         total = (Integer.parseInt(prods.getPrice()))+5000;
+                                        ShippingPrice = "5000";
 
                                     } else if (origin.equals("FJ") && gedung.equals("DP")){
                                         total = (Integer.parseInt(prods.getPrice()))+3000;
+                                        ShippingPrice = "3000";
 
                                     } else if (origin.equals("FJ") && gedung.equals("FJ")){
                                         total = (Integer.parseInt(prods.getPrice()))+1000;
+                                        ShippingPrice = "1000";
 
                                     }
 
@@ -215,7 +224,8 @@ public class Home extends AppCompatActivity
                                             prods.getName(),
                                             "1",
                                             String.valueOf(total),
-                                            addr
+                                            addr,
+                                            ShippingPrice
                                     ));
 
                                     //category.child("status").setValue("Waiting Admin Confirmation");

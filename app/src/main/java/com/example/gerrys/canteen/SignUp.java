@@ -99,9 +99,7 @@ public class SignUp extends AppCompatActivity {
                                     etDate.getText().toString()," "," "," ",etEmail.getText().toString(),"unVerified");
                             table_user.child(etPhone.getText().toString()).setValue(user);
                             Toast.makeText(SignUp.this, "Account successfully created!", Toast.LENGTH_SHORT).show();
-                            Intent I = new Intent(SignUp.this,SmsVerify.class);
-                            I.putExtra("Phone",etPhone.getText().toString());
-                            startActivity(I);
+
                         }
                     }
 
@@ -200,6 +198,11 @@ public class SignUp extends AppCompatActivity {
 
                         phoneVerificationId = verificationId;
                         resendToken = token;
+                        Intent I = new Intent(SignUp.this,SmsVerify.class);
+                        I.putExtra("Phone",etPhone.getText().toString());
+                        I.putExtra("creden",verificationId);
+                        I.putExtra("token",token.toString());
+                        startActivity(I);
 
                     }
                 };

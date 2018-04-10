@@ -97,6 +97,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "389252841267-tlet4pu5qco6c55flgv7ms1e1vh463aj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.gerrys.canteen",
+            "certificate_hash": "28c8a7b6fdec50f45d88a736dfde2547fec62fb8"
+          }
+        },
+        {
           "client_id": "389252841267-ehned3siem25jnvvhrj42ogam8c66adm.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

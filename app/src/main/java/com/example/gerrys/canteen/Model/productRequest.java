@@ -11,12 +11,13 @@ public class productRequest {
     private String totalprice;
     private String address;
     private String status;
+    private String shippingPrice;
 
     public productRequest(){
 
     }
 
-    public productRequest(String requestid, String merchantid, String productid, String productname, String quantity, String totalprice, String address, String status) {
+    public productRequest(String requestid, String merchantid, String productid, String productname, String quantity, String totalprice, String address, String status,String shippingPrice) {
         this.requestid=requestid;
         this.merchantid=merchantid;
         this.productid=productid;
@@ -25,7 +26,16 @@ public class productRequest {
         this.totalprice=totalprice;
         this.address=address;
         this.status=status;
+        this.shippingPrice = shippingPrice;
 
+    }
+
+    public void setShippingPrice(String shippingPrice) {
+        this.shippingPrice = shippingPrice;
+    }
+
+    public String getShippingPrice() {
+        return shippingPrice;
     }
 
     public String getStatus() {

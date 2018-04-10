@@ -6,17 +6,27 @@ public class Order {
     private String ProductName;
     private String Quantity;
     private String Price;
+    private String shippingPrice;
     private String Address;
 
     public Order() {
     }
 
-    public Order(String productId, String productName, String quantity, String price, String address) {
+    public Order(String productId, String productName, String quantity, String price, String address,String shippingPrice) {
         ProductId = productId;
         ProductName = productName;
         Quantity = quantity;
         Price = price;
         Address = address;
+        this.shippingPrice = shippingPrice;
+    }
+
+    public String getShippingPrice() {
+        return shippingPrice;
+    }
+
+    public void setShippingPrice(String shippingPrice) {
+        this.shippingPrice = shippingPrice;
     }
 
     public String getProductId() {

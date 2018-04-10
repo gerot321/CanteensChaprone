@@ -116,31 +116,40 @@ public class ShoeDetail extends AppCompatActivity {
                                 String origin = dataSnapshot.getValue().toString();
                                 addr = popupSpinner.getSelectedItem().toString()+edtAddress.getText().toString();
                                 String gedung = popupSpinner.getSelectedItem().toString();
+                                int ShippingPrice = 0;
                                 int total=0;
 
                                 if (origin.equals("FJ") && gedung.equals("GedungA")) {
-                                    total = (Integer.parseInt(currentShoe.getPrice())*Integer.parseInt(numberButton.getNumber()))+2000;
+                                    total = (Integer.parseInt(currentShoe.getPrice())*Integer.parseInt(numberButton.getNumber()));
+                                    ShippingPrice=2000;
                                 }
                                 else if (origin.equals("FJ") && gedung.equals("GedungB")){
-                                    total = (Integer.parseInt(currentShoe.getPrice())*Integer.parseInt(numberButton.getNumber()))+2000;
+                                    total = (Integer.parseInt(currentShoe.getPrice())*Integer.parseInt(numberButton.getNumber()));
+                                    ShippingPrice=2000;
 
                                 } else if (origin.equals("FJ") && gedung.equals("GedungC")){
-                                    total = (Integer.parseInt(currentShoe.getPrice())*Integer.parseInt(numberButton.getNumber()))+2000;
+                                    total = (Integer.parseInt(currentShoe.getPrice())*Integer.parseInt(numberButton.getNumber()));
+                                    ShippingPrice=2000;
 
                                 } else if (origin.equals("FJ") && gedung.equals("GedungD")){
-                                    total = (Integer.parseInt(currentShoe.getPrice())*Integer.parseInt(numberButton.getNumber()))+4000;
+                                    total = (Integer.parseInt(currentShoe.getPrice())*Integer.parseInt(numberButton.getNumber()));
+                                    ShippingPrice=4000;
 
                                 } else if (origin.equals("FJ") && gedung.equals("GedungE")){
-                                    total = (Integer.parseInt(currentShoe.getPrice())*Integer.parseInt(numberButton.getNumber()))+5000;
+                                    total = (Integer.parseInt(currentShoe.getPrice())*Integer.parseInt(numberButton.getNumber()));
+                                    ShippingPrice=5000;
 
                                 } else if (origin.equals("FJ") && gedung.equals("GedungF")){
-                                    total = (Integer.parseInt(currentShoe.getPrice())*Integer.parseInt(numberButton.getNumber()))+5000;
+                                    total = (Integer.parseInt(currentShoe.getPrice())*Integer.parseInt(numberButton.getNumber()));
+                                    ShippingPrice=5000;
 
                                 } else if (origin.equals("FJ") && gedung.equals("DP")){
-                                    total = (Integer.parseInt(currentShoe.getPrice())*Integer.parseInt(numberButton.getNumber()))+3000;
+                                    total = (Integer.parseInt(currentShoe.getPrice())*Integer.parseInt(numberButton.getNumber()));
+                                    ShippingPrice=3000;
 
                                 } else if (origin.equals("FJ") && gedung.equals("FJ")){
-                                    total = (Integer.parseInt(currentShoe.getPrice())*Integer.parseInt(numberButton.getNumber()))+1000;
+                                    total = (Integer.parseInt(currentShoe.getPrice())*Integer.parseInt(numberButton.getNumber()));
+                                    ShippingPrice=1000;
 
                                 }
                                 Log.d("asdasdasdasd",String.valueOf(currentShoe.getPrice()) );
@@ -150,7 +159,8 @@ public class ShoeDetail extends AppCompatActivity {
                                         currentShoe.getName(),
                                         numberButton.getNumber(),
                                         String.valueOf(total),
-                                        addr
+                                        addr,
+                                        String.valueOf(ShippingPrice)
                                 ));
 
                                 //category.child("status").setValue("Waiting Admin Confirmation");

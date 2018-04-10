@@ -43,16 +43,22 @@ public class SmsVerify extends AppCompatActivity {
     private PhoneAuthProvider.ForceResendingToken resendToken;
 
     private FirebaseAuth fbAuth;
-    String Phone;
+    String Phone,Creden,token;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.smslayout);
         Phone = getIntent().getStringExtra("Phone");
 
+
+        Creden= getIntent().getStringExtra("creden");
+        token= getIntent().getStringExtra("token");
+        phoneVerificationId = Creden;
+        resendToken = getIntent().getParcelableExtra("token");
+
         codeText = (EditText) findViewById(R.id.Phonenoedittext);
-        verifyButton = (Button) findViewById(R.id.PhoneVerify1);
-        resendButton = (Button) findViewById(R.id.PhoneVerify);
+        verifyButton = (Button) findViewById(R.id.verivy);
+        resendButton = (Button) findViewById(R.id.resend);
         fbAuth = FirebaseAuth.getInstance();
         data = FirebaseDatabase.getInstance();
         user= data.getReference("User");
@@ -104,7 +110,7 @@ public class SmsVerify extends AppCompatActivity {
         String code = codeText.getText().toString();
 
         PhoneAuthCredential credential =
-                PhoneAuthProvider.getCredential(phoneVerificationId, code);
+                PhoneAuthProvider.getCredential(Creden, code);
         signInWithPhoneAuthCredential(credential);
     }
 

@@ -113,7 +113,6 @@ public class Checkout extends AppCompatActivity {
                 orderId = PriCode+Integer.toString(unic);
                 final ProgressDialog mDialog = new ProgressDialog(Checkout.this);;
 
-
                 // Add edit text to alert dialog
                 alertDialog.setIcon(R.drawable.ic_add_shopping_cart_black_24dp);
 
@@ -210,10 +209,6 @@ public class Checkout extends AppCompatActivity {
                             PriCode = Common.currentUser.getPhone();
                             orderId = PriCode+Integer.toString(unic);
 
-
-
-
-
                             alertDialog.setPositiveButton("oke", new DialogInterface.OnClickListener() {
 
                                 public void onClick(DialogInterface dialog, int which) {
@@ -237,9 +232,11 @@ public class Checkout extends AppCompatActivity {
 
                                                                 public void onDataChange(DataSnapshot dataSnapshot) {
 
+
+
                                                                     productRequest req= new productRequest(orderId.toString(),dataSnapshot.getValue().toString(),orders.getProductId(),
                                                                             orders.getProductName().toString(),orders.getQuantity().toString()
-                                                                            ,orders.getPrice().toString(),orders.getAddress(),"diteruskan ke merchant") ;
+                                                                            ,orders.getPrice().toString(),orders.getAddress(),"diteruskan ke merchant",orders.getShippingPrice()) ;
                                                                     prodReq.push().setValue(req);
                                                                     finish();
                                                                 }
@@ -363,7 +360,7 @@ public class Checkout extends AppCompatActivity {
 
                                                         productRequest req= new productRequest(orderId.toString(),dataSnapshot.getValue().toString(),orders.getProductId(),
                                                                 orders.getProductName().toString(),orders.getQuantity().toString()
-                                                                ,orders.getPrice().toString(),orders.getAddress(),"diteruskan ke merchant") ;
+                                                                ,orders.getPrice().toString(),orders.getAddress(),"diteruskan ke merchant",orders.getShippingPrice()) ;
                                                         prodReq.push().setValue(req);
                                                     }
 
