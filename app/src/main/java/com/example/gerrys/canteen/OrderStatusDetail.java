@@ -43,7 +43,7 @@ public class OrderStatusDetail extends AppCompatActivity {
                 productRequest.class,
                 R.layout.order_detail_layout,
                 OrderViewDetailHolder.class,
-                prodReq.orderByChild("requestid").equalTo(phone)
+                prodReq.orderByChild("requestid").equalTo(key)
         ) {
             @Override
             protected void populateViewHolder(OrderViewDetailHolder viewHolder, productRequest model, int position) {

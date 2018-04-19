@@ -14,10 +14,8 @@ import com.example.gerrys.canteen.Interface.ItemClickListener;
 import com.example.gerrys.canteen.Model.Order;
 import com.example.gerrys.canteen.R;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by Cj_2 on 2017-11-26.
@@ -39,7 +37,7 @@ class CartViewHolder extends RecyclerView.ViewHolder implements View.OnClickList
 
         txt_cart_name = (TextView)itemView.findViewById(R.id.cart_item_name);
         txt_price = (TextView)itemView.findViewById(R.id.cart_item_price);
-        txt_shipping_price = (TextView)itemView.findViewById(R.id.cart_item_price);
+        txt_shipping_price = (TextView)itemView.findViewById(R.id.cart_shipping_price);
         img_cart_count = (ImageView)itemView.findViewById(R.id.cart_item_count);
 
     }
@@ -74,14 +72,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartViewHolder>{
 
         holder.img_cart_count.setImageDrawable(drawable);
 
-        Locale locale = new Locale("en", "US");
-        NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
 
-        int price = (Integer.parseInt(listData.get(position).getPrice()));
+
         int shippingPrice = (Integer.parseInt(listData.get(position).getShippingPrice()));
-        holder.txt_price.setText("Price per Item : "+fmt.format(price));
+        holder.txt_price.setText("Total Price : "+listData.get(position).getPrice());
 
-        holder.txt_shipping_price.setText("Shipping Price" +fmt.format((shippingPrice)));
+        holder.txt_shipping_price.setText("Shipping Price : " +(shippingPrice));
 
         holder.txt_cart_name.setText(listData.get(position).getProductName());
     }

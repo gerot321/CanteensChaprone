@@ -21,12 +21,12 @@
             android:layout_height="wrap_content"
             android:hint="Phone Number"
             android:inputType="phone"
-            android:text="0859451702"
+            android:text="+62085945170120"
             android:textColorHint="@android:color/white"
             android:textSize="34sp"
 
             app:met_floatingLabel="highlight"
-            app:met_maxCharacters="13"
+            app:met_maxCharacters="15"
 
             app:met_singleLineEllipsis="true" />
 
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:hint="Password"
             android:inputType="textPassword"
-            android:text="475699"
+            android:text="11111111"
             android:textColorHint="@android:color/white"
             android:textSize="34sp"
             app:met_floatingLabel="highlight"
