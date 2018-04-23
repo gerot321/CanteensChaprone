@@ -17,9 +17,7 @@ import com.example.gerrys.canteen.R;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Cj_2 on 2017-11-26.
- */
+
 
 class CartViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 

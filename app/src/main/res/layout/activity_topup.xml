@@ -27,8 +27,8 @@
         android:layout_alignParentStart="true"
         android:layout_marginBottom="24dp"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Code Voucher" />
+        android:inputType="text"
+        android:hint="Code Voucher" />
 
     <TextView
         android:id="@+id/result"

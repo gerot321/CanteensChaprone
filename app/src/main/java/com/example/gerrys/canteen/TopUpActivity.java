@@ -17,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +38,7 @@ public class TopUpActivity extends AppCompatActivity {
     DatabaseReference user;
     DatabaseReference voucher;
     Toolbar mToolbar;
+    EditText code;
 
     String statsaldo = "ngga";
     public static final int REQUEST_CODE = 100;
@@ -52,6 +54,8 @@ public class TopUpActivity extends AppCompatActivity {
         scanbtn = (Button) findViewById(R.id.scanbtn);
         result = (TextView) findViewById(R.id.result);
         mToolbar = (Toolbar)findViewById(R.id.toolbar);
+        code = (EditText)findViewById(R.id.editText2);
+
         mToolbar.setTitle("Top up saldo");
         mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
         setSupportActionBar(mToolbar);
@@ -64,6 +68,7 @@ public class TopUpActivity extends AppCompatActivity {
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     Voucher vocer = dataSnapshot.getValue(Voucher.class);
                     result.setText(vocer.getValue().toString());
+                    code.setText(barcode);
                 }
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
@@ -85,97 +90,104 @@ public class TopUpActivity extends AppCompatActivity {
         scanbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(TopUpActivity.this);
-                alertDialog.setTitle("TopUp Saldo Confirmation");
+                if(code.getText()!=null){
+                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(TopUpActivity.this);
+                    alertDialog.setTitle("TopUp Saldo Confirmation");
 
-                LayoutInflater layoutInflater =
-                        (LayoutInflater) getBaseContext()
-                                .getSystemService(LAYOUT_INFLATER_SERVICE);
+                    LayoutInflater layoutInflater =
+                            (LayoutInflater) getBaseContext()
+                                    .getSystemService(LAYOUT_INFLATER_SERVICE);
 
-                Context context = layoutInflater.getContext();
-                LinearLayout layout = new LinearLayout(context);
-                layout.setOrientation(LinearLayout.VERTICAL);
+                    Context context = layoutInflater.getContext();
+                    LinearLayout layout = new LinearLayout(context);
+                    layout.setOrientation(LinearLayout.VERTICAL);
 
-                final TextView text = new TextView(TopUpActivity.this);
+                    final TextView text = new TextView(TopUpActivity.this);
 
-                text.setGravity(Gravity.CENTER);
-                layout.addView(text);
-                alertDialog.setView(layout);
-                voucher.child(barcode).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        Voucher vocer = dataSnapshot.getValue(Voucher.class);
-                        text.setText("Voucher Amount : " + vocer.getValue().toString());
-                    }
+                    text.setGravity(Gravity.CENTER);
+                    layout.addView(text);
+                    alertDialog.setView(layout);
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                    voucher.child(barcode).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Voucher vocer = dataSnapshot.getValue(Voucher.class);
+                            text.setText("Voucher Amount : " + vocer.getValue().toString());
+                        }
 
-                    }
-                });
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
-                // Add edit text to alert dialog
-                alertDialog.setIcon(R.drawable.ic_add_shopping_cart_black_24dp);
+                        }
+                    });
 
-                alertDialog.setPositiveButton("Isi", new DialogInterface.OnClickListener() {
+                    // Add edit text to alert dialog
+                    alertDialog.setIcon(R.drawable.ic_add_shopping_cart_black_24dp);
 
-                    public void onClick(DialogInterface dialog, int which) {
-                        voucher.child(barcode).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                final Voucher vocer = dataSnapshot.getValue(Voucher.class);
-                                if (vocer.getStatus().equals("valid")) {
+                    alertDialog.setPositiveButton("Isi", new DialogInterface.OnClickListener() {
 
-                                    user.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(DataSnapshot dataSnapshot) {
-                                            if (vocer.getStatus().equals("valid")) {
-                                                User users = dataSnapshot.getValue(User.class);
-                                                int total = 0;
-                                                total = Integer.valueOf(users.getSaldo()) + Integer.valueOf(vocer.getValue().toString());
-                                                user.child(userID).child("saldo").setValue(String.valueOf(total));
-                                                voucher.child(barcode).child("status").setValue("invalid");
+                        public void onClick(DialogInterface dialog, int which) {
+                            voucher.child(barcode).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    final Voucher vocer = dataSnapshot.getValue(Voucher.class);
+                                    if (vocer.getStatus().equals("valid")) {
 
-                                            }else{
-                                                Toast.makeText(TopUpActivity.this, "Kode voucher tidak sesuai atau sudah di topup", Toast.LENGTH_SHORT).show();
+                                        user.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                if (vocer.getStatus().equals("valid")) {
+                                                    User users = dataSnapshot.getValue(User.class);
+                                                    int total = 0;
+                                                    total = Integer.valueOf(users.getSaldo()) + Integer.valueOf(vocer.getValue().toString());
+                                                    user.child(userID).child("saldo").setValue(String.valueOf(total));
+                                                    voucher.child(barcode).child("status").setValue("invalid");
+
+                                                }else{
+                                                    Toast.makeText(TopUpActivity.this, "Kode voucher tidak sesuai atau sudah di topup", Toast.LENGTH_SHORT).show();
+                                                }
+
                                             }
 
-                                        }
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
 
-                                        @Override
-                                        public void onCancelled(DatabaseError databaseError) {
+                                            }
+                                        });
 
-                                        }
-                                    });
-
-                                    Toast.makeText(TopUpActivity.this, "saldo telah ditambahkan" + vocer.getValue().toString(), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(TopUpActivity.this, "saldo telah ditambahkan" + vocer.getValue().toString(), Toast.LENGTH_SHORT).show();
 
 
-                                } else {
-                                    Toast.makeText(TopUpActivity.this, "Kode voucher tidak sesuai atau sudah di topup", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(TopUpActivity.this, "Kode voucher tidak sesuai atau sudah di topup", Toast.LENGTH_SHORT).show();
+
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
 
                                 }
-                            }
+                            });
+                            Intent intent = new Intent(TopUpActivity.this, Home.class);
+                            intent.putExtra("phoneId",userID);
+                            startActivity(intent);
+                        }
+                    });
 
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
+                    alertDialog.setNegativeButton("Batal", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int which) {
+                            dialogInterface.dismiss();
+                        }
+                    });
 
-                            }
-                        });
-                        Intent intent = new Intent(TopUpActivity.this, Home.class);
-                        intent.putExtra("phoneId",userID);
-                        startActivity(intent);
-                    }
-                });
+                    alertDialog.show();
+                }
+                else{
+                    Toast.makeText(TopUpActivity.this, "the voucher code has not been entered", Toast.LENGTH_SHORT).show();
+                }
 
-                alertDialog.setNegativeButton("Batal", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int which) {
-                        dialogInterface.dismiss();
-                    }
-                });
-
-                alertDialog.show();
 
             }
         });

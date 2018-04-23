@@ -14,7 +14,7 @@
         android:layout_centerInParent="true">
 
         <ImageView
-            android:src="@drawable/jordanlogo"
+            android:src="@drawable/logob"
             android:layout_width="200dp"
             android:layout_height="200dp" />
 

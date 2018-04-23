@@ -129,8 +129,7 @@ public class Checkout extends AppCompatActivity {
                                     Toast.makeText(Checkout.this, "Account already exist!", Toast.LENGTH_SHORT).show();
                                 }else {
 
-                                    requests.child(orderId)
-                                            .setValue(request);
+                                    requests.child(orderId).setValue(request);
 
                                     Toast.makeText(Checkout.this, "Account successfully created!", Toast.LENGTH_SHORT).show();
                                 }
