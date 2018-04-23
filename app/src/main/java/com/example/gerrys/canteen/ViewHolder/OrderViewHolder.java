@@ -2,6 +2,7 @@ package com.example.gerrys.canteen.ViewHolder;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.gerrys.canteen.Interface.ItemClickListener;
@@ -11,6 +12,7 @@ import com.example.gerrys.canteen.R;
 public class OrderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
     public TextView txtOrderId, txtOrderStatus, txtOrderPhone, txtOrderMethod, txtOrderTotal;
+    public Button cancel;
 
     private ItemClickListener itemClickListener;
 
@@ -22,6 +24,7 @@ public class OrderViewHolder extends RecyclerView.ViewHolder implements View.OnC
         txtOrderPhone = (TextView)itemView.findViewById(R.id.order_phone);
         txtOrderMethod = (TextView)itemView.findViewById(R.id.order_method);
         txtOrderTotal = (TextView)itemView.findViewById(R.id.order_total);
+        cancel = (Button)itemView.findViewById(R.id.cancelButton);
         itemView.setOnClickListener(this);
     }
 

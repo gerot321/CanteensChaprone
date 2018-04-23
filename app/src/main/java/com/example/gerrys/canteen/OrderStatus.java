@@ -50,12 +50,26 @@ public class OrderStatus extends AppCompatActivity {
                 requests.orderByChild("phone").equalTo(phone)
         ) {
             @Override
-            protected void populateViewHolder(OrderViewHolder viewHolder, Request model, int position) {
+            protected void populateViewHolder(OrderViewHolder viewHolder, Request model, final int position) {
                 viewHolder.txtOrderId.setText(adapter.getRef(position).getKey());
                 viewHolder.txtOrderStatus.setText(model.getStatus());
                 viewHolder.txtOrderPhone.setText(model.getPhone());
                 viewHolder.txtOrderMethod.setText(model.getPaymentMethod());
                 viewHolder.txtOrderTotal.setText(model.getTotal());
+                if(model.getStatus().equals("Waiting Payment")){
+                    viewHolder.cancel.setVisibility(View.VISIBLE);
+                    viewHolder.cancel.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //method cancel
+                            requests.child(adapter.getRef(position).getKey()).child("status").setValue("Canceled Order");
+                        }
+                    });
+                }else
+                {
+                    viewHolder.cancel.setVisibility(View.INVISIBLE);
+                }
+
                 viewHolder.setItemClickListener(new ItemClickListener() {
                     @Override
                     public void onClick(View view, int position, boolean isLongCLick) {
